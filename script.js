@@ -542,7 +542,7 @@ const juegosEjemplo = [
     genero: "Aventura",
     precio: 24990,
     stock: 9,
-    imagen: "https://wallpapers.com/images/featured/stray-taob394fcubgvuwk.jpg",
+    imagen: "https://img-eshop.cdn.nintendo.net/i/d8c81b018b2e579aa5c224e635cf5368266ef168c7828e9ae18ad9444158efc4.jpg",
     destacado: false
   },
   {
