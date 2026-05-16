@@ -14,8 +14,7 @@ const juegosEjemplo = [
     genero: "Acción",
     precio: 59990,
     stock: 10,
-    imagen:
-      "https://4kwallpapers.com/images/wallpapers/god-of-war-ragnarok-kratos-atreus-2022-games-playstation-4-3840x2160-8636.jpg",
+    imagen: "https://4kwallpapers.com/images/wallpapers/god-of-war-ragnarok-kratos-atreus-2022-games-playstation-4-3840x2160-8636.jpg",
     destacado: true
   },
   {
@@ -26,8 +25,7 @@ const juegosEjemplo = [
     genero: "RPG",
     precio: 49990,
     stock: 8,
-    imagen:
-      "https://assets-prd.ignimgs.com/2021/06/12/elden-ring-button-03-1623460560664.jpg",
+    imagen: "https://assets-prd.ignimgs.com/2021/06/12/elden-ring-button-03-1623460560664.jpg",
     destacado: true
   },
   {
@@ -38,8 +36,7 @@ const juegosEjemplo = [
     genero: "Acción",
     precio: 64990,
     stock: 12,
-    imagen:
-      "https://cdn1.epicgames.com/offer/b2818b59c0bb420e9647983dfd254931/EGS_Octopus_InsomniacGamesNixxesSoftware_S1_2560x1440-f27da78f484626718d1e22e7d6950ca5",
+    imagen: "https://cdn1.epicgames.com/offer/b2818b59c0bb420e9647983dfd254931/EGS_Octopus_InsomniacGamesNixxesSoftware_S1_2560x1440-f27da78f484626718d1e22e7d6950ca5",
     destacado: true
   },
   {
@@ -50,8 +47,7 @@ const juegosEjemplo = [
     genero: "Mundo abierto",
     precio: 35990,
     stock: 14,
-    imagen:
-      "https://criticalhits.com.br/wp-content/uploads/2018/10/red-dead-redemption-2-01.jpg",
+    imagen: "https://criticalhits.com.br/wp-content/uploads/2018/10/red-dead-redemption-2-01.jpg",
     destacado: true
   },
   {
@@ -62,8 +58,7 @@ const juegosEjemplo = [
     genero: "Acción",
     precio: 50000,
     stock: 15,
-    imagen:
-      "https://img.opencritic.com/game/8351/o/4YpEGFpE.jpg",
+    imagen: "https://img.opencritic.com/game/8351/o/4YpEGFpE.jpg",
     destacado: true
   },
   {
@@ -497,7 +492,7 @@ const juegosEjemplo = [
   },
   {
     id: crypto.randomUUID(),
-    ti0tulo: "Rust",
+    titulo: "Rust",
     saga: "Rust",
     plataforma: "PC",
     genero: "Aventura",
@@ -547,7 +542,7 @@ const juegosEjemplo = [
     genero: "Aventura",
     precio: 24990,
     stock: 9,
-    imagen: "https://www.xtrafondos.com/wallpapers/stray-videojuego-portada-11201.jpg",
+    imagen: "https://wallpapers.com/images/featured/stray-taob394fcubgvuwk.jpg",
     destacado: false
   },
   {
@@ -582,8 +577,18 @@ const juegosEjemplo = [
     stock: 6,
     imagen: "https://gaming-cdn.com/images/products/18031/orig/dark-souls-3-remastered-pc-game-steam-cover.jpg?v=1731922378",
     destacado: true
-  },  
+  },
 ];
+
+// ============================================================
+// EXPRESIONES REGULARES PARA VALIDACIONES
+// ============================================================
+
+const REGEX_TITULO = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s:'\-\.]{3,80}$/;
+const REGEX_SAGA = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s'\-\.]{2,50}$/;
+const REGEX_PRECIO = /^[1-9]\d{0,8}$/;
+const REGEX_STOCK = /^\d{1,4}$/;
+const REGEX_URL_IMAGEN = /^https?:\/\/.+\..+/i;
 
 // ============================================================
 // APP INIT
@@ -600,7 +605,7 @@ function iniciarApp() {
 }
 
 // ============================================================
-// SCROLL REVEAL (IntersectionObserver)
+// SCROLL REVEAL
 // ============================================================
 
 function iniciarScrollReveal() {
@@ -614,16 +619,13 @@ function iniciarScrollReveal() {
         observer.unobserve(entry.target);
       }
     });
-  }, {
-    threshold: 0.1,
-    rootMargin: '0px 0px -40px 0px'
-  });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
   reveals.forEach(el => observer.observe(el));
 }
 
 // ============================================================
-// STICKY NAVBAR SCROLL EFFECT
+// STICKY NAVBAR
 // ============================================================
 
 function iniciarNavbarScroll() {
@@ -634,11 +636,7 @@ function iniciarNavbarScroll() {
   window.addEventListener('scroll', () => {
     if (!ticking) {
       requestAnimationFrame(() => {
-        if (window.scrollY > 50) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
+        navbar.classList.toggle('scrolled', window.scrollY > 50);
         ticking = false;
       });
       ticking = true;
@@ -647,7 +645,7 @@ function iniciarNavbarScroll() {
 }
 
 // ============================================================
-// DATA FUNCTIONS (unchanged logic)
+// DATA FUNCTIONS
 // ============================================================
 
 function cargarJuegos() {
@@ -660,12 +658,12 @@ function guardarJuegos() {
 }
 
 function sanitizarTexto(texto) {
-  return texto.trim().replace(/[<>]/g, "").replace(/script/gi, "");
+  return texto.trim().replace(/[<>]/g, "").replace(/script/gi, "").replace(/on\w+=/gi, "");
 }
 
 function validarUrlImagen(url) {
   if (!url) return true;
-  try { new URL(url); return true; } catch { return false; }
+  try { new URL(url); return REGEX_URL_IMAGEN.test(url); } catch { return false; }
 }
 
 function mostrarNotificacion(mensaje) {
@@ -689,12 +687,13 @@ function agregarJuego(e) {
 
   const duplicado = juegos.some(
     item =>
+      item.titulo &&
       item.titulo.toLowerCase() === juego.titulo.toLowerCase() &&
       item.plataforma === juego.plataforma
   );
 
   if (duplicado) {
-    mostrarError("errorTitulo", "Juego duplicado");
+    mostrarError("errorTitulo", "Juego duplicado en esta plataforma");
     return;
   }
 
@@ -721,38 +720,54 @@ function obtenerDatosFormulario() {
   };
 }
 
+// ============================================================
+// VALIDACIÓN CON REGEX
+// ============================================================
+
 function validarJuego(juego) {
   let valido = true;
 
-  if (juego.titulo.length < 3) {
-    mostrarError("errorTitulo", "Mínimo 3 caracteres");
+  if (!REGEX_TITULO.test(juego.titulo)) {
+    mostrarError("errorTitulo", "Mínimo 3 caracteres. Solo letras, números y caracteres básicos");
     valido = false;
   }
+
+  if (juego.saga && !REGEX_SAGA.test(juego.saga)) {
+    mostrarError("errorSaga", "Solo letras, números y espacios (2-50 caracteres)");
+    valido = false;
+  }
+
   if (!juego.plataforma) {
-    mostrarError("errorPlataforma", "Selecciona plataforma");
+    mostrarError("errorPlataforma", "Selecciona una plataforma");
     valido = false;
   }
+
   if (!juego.genero) {
-    mostrarError("errorGenero", "Selecciona género");
+    mostrarError("errorGenero", "Selecciona un género");
     valido = false;
   }
-  if (juego.precio < 0) {
-    mostrarError("errorPrecio", "Precio inválido");
+
+  if (!REGEX_PRECIO.test(String(juego.precio))) {
+    mostrarError("errorPrecio", "Ingresa un precio válido (número entero positivo)");
     valido = false;
   }
-  if (juego.stock < 0 || !Number.isInteger(juego.stock)) {
-    mostrarError("errorStock", "Stock inválido");
+
+  if (!REGEX_STOCK.test(String(juego.stock))) {
+    mostrarError("errorStock", "Stock debe ser un número entre 0 y 9999");
     valido = false;
   }
-  if (!validarUrlImagen(juego.imagen)) {
-    mostrarError("errorImagen", "URL inválida");
+
+  if (juego.imagen && juego.imagen !== imagenDefault && !validarUrlImagen(juego.imagen)) {
+    mostrarError("errorImagen", "URL inválida. Debe comenzar con http:// o https://");
     valido = false;
   }
+
   return valido;
 }
 
 function mostrarError(id, mensaje) {
-  document.getElementById(id).textContent = mensaje;
+  const el = document.getElementById(id);
+  if (el) el.textContent = mensaje;
 }
 
 function limpiarErrores() {
@@ -774,13 +789,9 @@ function mostrarSkeletons(cantidad = 6) {
       <div class="skeleton-body">
         <div class="skeleton-line wide"></div>
         <div class="skeleton-line medium"></div>
-        <div class="skeleton-badges">
-          <div class="skeleton-badge"></div>
-          <div class="skeleton-badge"></div>
-        </div>
+        <div class="skeleton-badges"><div class="skeleton-badge"></div><div class="skeleton-badge"></div></div>
         <div class="skeleton-line short"></div>
-      </div>
-    `;
+      </div>`;
     contenedor.appendChild(sk);
   }
 }
@@ -797,34 +808,23 @@ function renderizarJuegos(lista = juegos) {
 
   setTimeout(() => {
     contenedor.innerHTML = "";
-
-    if (lista.length === 0) {
-      sinResultados.classList.remove("hidden");
-      return;
-    }
-
+    if (lista.length === 0) { sinResultados.classList.remove("hidden"); return; }
     sinResultados.classList.add("hidden");
     actualizarContador(lista.length);
-
-    lista.forEach(juego => {
-      const card = crearCardJuego(juego);
-      contenedor.appendChild(card);
-    });
+    lista.forEach(juego => contenedor.appendChild(crearCardJuego(juego)));
   }, 300);
 }
 
 function actualizarContador(cantidad) {
   const contador = document.getElementById("contadorResultados");
   if (!contador) return;
-  if (cantidad === juegos.length) {
-    contador.textContent = `${cantidad} juegos en catálogo`;
-  } else {
-    contador.textContent = `Mostrando ${cantidad} de ${juegos.length} juegos`;
-  }
+  contador.textContent = cantidad === juegos.length
+    ? `${cantidad} juegos en catálogo`
+    : `Mostrando ${cantidad} de ${juegos.length} juegos`;
 }
 
 // ============================================================
-// CREAR CARD
+// CREAR CARD (createElement — sin innerHTML)
 // ============================================================
 
 function crearCardJuego(juego) {
@@ -840,7 +840,6 @@ function crearCardJuego(juego) {
   img.className = "game-image";
   img.loading = "lazy";
   img.onerror = () => { img.src = imagenDefault; };
-
   imgWrapper.addEventListener("click", () => abrirVistaRapida(juego));
   imgWrapper.appendChild(img);
 
@@ -857,14 +856,8 @@ function crearCardJuego(juego) {
 
   const badges = document.createElement("div");
   badges.className = "badges";
-
-  const plataforma = crearBadge(juego.plataforma, "platform");
-  const genero = crearBadge(juego.genero, "genre");
-  badges.append(plataforma, genero);
-
-  if (juego.destacado) {
-    badges.append(crearBadge("★ Destacado", "destacado"));
-  }
+  badges.append(crearBadge(juego.plataforma, "platform"), crearBadge(juego.genero, "genre"));
+  if (juego.destacado) badges.append(crearBadge("★ Destacado", "destacado"));
 
   const info = document.createElement("div");
   info.className = "game-info";
@@ -875,12 +868,12 @@ function crearCardJuego(juego) {
 
   const stock = document.createElement("div");
   stock.className = "game-stock";
-
-  let stockClase = "";
-  if (juego.stock <= 3) stockClase = "stock-critico";
-  else if (juego.stock <= 7) stockClase = "stock-bajo";
-  stock.innerHTML = `<span class="stock-badge ${stockClase}">Stock: ${juego.stock}</span>`;
-
+  const stockSpan = document.createElement("span");
+  stockSpan.className = "stock-badge";
+  if (juego.stock <= 3) stockSpan.classList.add("stock-critico");
+  else if (juego.stock <= 7) stockSpan.classList.add("stock-bajo");
+  stockSpan.textContent = `Stock: ${juego.stock}`;
+  stock.appendChild(stockSpan);
   info.append(precio, stock);
 
   const botones = document.createElement("div");
@@ -899,7 +892,6 @@ function crearCardJuego(juego) {
   botones.append(btnEditar, btnEliminar);
   content.append(title, saga, badges, info, botones);
   card.append(imgWrapper, content);
-
   return card;
 }
 
@@ -930,24 +922,14 @@ function eliminarJuego(id) {
 function animarContador(elemento, valorFinal, prefijo = "", esCurrency = false) {
   const duracion = 800;
   const inicio = performance.now();
-  const valorInicial = 0;
 
   function step(timestamp) {
     const progreso = Math.min((timestamp - inicio) / duracion, 1);
-    const eased = 1 - Math.pow(1 - progreso, 3); // easeOutCubic
-    const valorActual = Math.round(valorInicial + (valorFinal - valorInicial) * eased);
-
-    if (esCurrency) {
-      elemento.textContent = formatearMoneda(valorActual);
-    } else {
-      elemento.textContent = prefijo + valorActual.toLocaleString("es-CL");
-    }
-
-    if (progreso < 1) {
-      requestAnimationFrame(step);
-    }
+    const eased = 1 - Math.pow(1 - progreso, 3);
+    const valorActual = Math.round(valorFinal * eased);
+    elemento.textContent = esCurrency ? formatearMoneda(valorActual) : prefijo + valorActual.toLocaleString("es-CL");
+    if (progreso < 1) requestAnimationFrame(step);
   }
-
   requestAnimationFrame(step);
 }
 
@@ -973,7 +955,6 @@ function formatearMoneda(valor) {
 
 function aplicarFiltros() {
   let resultado = [...juegos];
-
   const busqueda = document.getElementById("buscarJuego").value.toLowerCase();
   const plataforma = document.getElementById("filtroPlataforma").value;
   const genero = document.getElementById("filtroGenero").value;
@@ -982,11 +963,10 @@ function aplicarFiltros() {
 
   if (busqueda) {
     resultado = resultado.filter(j =>
-      j.titulo.toLowerCase().includes(busqueda) ||
-      j.saga.toLowerCase().includes(busqueda)
+      (j.titulo || "").toLowerCase().includes(busqueda) ||
+      (j.saga || "").toLowerCase().includes(busqueda)
     );
   }
-
   if (plataforma) resultado = resultado.filter(j => j.plataforma === plataforma);
   if (genero) resultado = resultado.filter(j => j.genero === genero);
   if (destacado === "true") resultado = resultado.filter(j => j.destacado);
@@ -995,18 +975,15 @@ function aplicarFiltros() {
     case "precioAsc":  resultado.sort((a,b) => a.precio - b.precio); break;
     case "precioDesc": resultado.sort((a,b) => b.precio - a.precio); break;
     case "stockDesc":  resultado.sort((a,b) => b.stock - a.stock); break;
-    case "tituloAsc":  resultado.sort((a,b) => a.titulo.localeCompare(b.titulo)); break;
+    case "tituloAsc":  resultado.sort((a,b) => (a.titulo || "").localeCompare(b.titulo || "")); break;
   }
-
   renderizarJuegos(resultado);
 }
 
 function limpiarFiltros() {
-  document.getElementById("buscarJuego").value = "";
-  document.getElementById("filtroPlataforma").value = "";
-  document.getElementById("filtroGenero").value = "";
-  document.getElementById("filtroDestacado").value = "";
-  document.getElementById("ordenar").value = "";
+  ["buscarJuego","filtroPlataforma","filtroGenero","filtroDestacado","ordenar"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
   renderizarJuegos();
 }
 
@@ -1015,22 +992,20 @@ function limpiarFiltros() {
 // ============================================================
 
 function abrirModalEditar(id) {
-  const juego = juegos.find(j => j.id === id);
-  document.getElementById("editId").value = juego.id;
-  document.getElementById("editTitulo").value = juego.titulo;
-  document.getElementById("editSaga").value = juego.saga;
-  document.getElementById("editPlataforma").value = juego.plataforma;
-  document.getElementById("editGenero").value = juego.genero;
-  document.getElementById("editPrecio").value = juego.precio;
-  document.getElementById("editStock").value = juego.stock;
-  document.getElementById("editImagen").value = juego.imagen;
-  document.getElementById("editDestacado").checked = juego.destacado;
+  const j = juegos.find(j => j.id === id);
+  document.getElementById("editId").value = j.id;
+  document.getElementById("editTitulo").value = j.titulo;
+  document.getElementById("editSaga").value = j.saga;
+  document.getElementById("editPlataforma").value = j.plataforma;
+  document.getElementById("editGenero").value = j.genero;
+  document.getElementById("editPrecio").value = j.precio;
+  document.getElementById("editStock").value = j.stock;
+  document.getElementById("editImagen").value = j.imagen;
+  document.getElementById("editDestacado").checked = j.destacado;
   document.getElementById("modalEditar").classList.remove("hidden");
 }
 
-function cerrarModal() {
-  document.getElementById("modalEditar").classList.add("hidden");
-}
+function cerrarModal() { document.getElementById("modalEditar").classList.add("hidden"); }
 
 function guardarEdicion(e) {
   e.preventDefault();
@@ -1073,7 +1048,6 @@ function restaurarJuegosEjemplo() {
 function abrirVistaRapida(juego) {
   const modal = document.getElementById("modalVistaRapida");
   const img = document.getElementById("vrImagen");
-
   img.src = juego.imagen;
   img.onerror = () => { img.src = imagenDefault; };
   document.getElementById("vrTitulo").textContent = juego.titulo;
@@ -1082,23 +1056,24 @@ function abrirVistaRapida(juego) {
   document.getElementById("vrGenero").textContent = juego.genero;
   document.getElementById("vrPrecio").textContent = formatearMoneda(juego.precio);
 
-  let stockClase = "";
-  if (juego.stock <= 3) stockClase = "stock-critico";
-  else if (juego.stock <= 7) stockClase = "stock-bajo";
-  document.getElementById("vrStock").innerHTML = `<span class="stock-badge ${stockClase}">Stock: ${juego.stock}</span>`;
+  const stockContainer = document.getElementById("vrStock");
+  stockContainer.innerHTML = "";
+  const stockSpan = document.createElement("span");
+  stockSpan.className = "stock-badge";
+  if (juego.stock <= 3) stockSpan.classList.add("stock-critico");
+  else if (juego.stock <= 7) stockSpan.classList.add("stock-bajo");
+  stockSpan.textContent = `Stock: ${juego.stock}`;
+  stockContainer.appendChild(stockSpan);
 
   const dest = document.getElementById("vrDestacado");
   juego.destacado ? dest.classList.remove("hidden") : dest.classList.add("hidden");
-
   modal.classList.remove("hidden");
 }
 
-function cerrarVistaRapida() {
-  document.getElementById("modalVistaRapida").classList.add("hidden");
-}
+function cerrarVistaRapida() { document.getElementById("modalVistaRapida").classList.add("hidden"); }
 
 // ============================================================
-// GRÁFICO PLATAFORMAS
+// GRÁFICO PLATAFORMAS (createElement)
 // ============================================================
 
 function renderizarGraficoPlataformas() {
@@ -1106,32 +1081,38 @@ function renderizarGraficoPlataformas() {
   if (!contenedor) return;
 
   const conteo = {};
-  juegos.forEach(j => {
-    conteo[j.plataforma] = (conteo[j.plataforma] || 0) + 1;
-  });
-
+  juegos.forEach(j => { conteo[j.plataforma] = (conteo[j.plataforma] || 0) + 1; });
   const sorted = Object.entries(conteo).sort((a, b) => b[1] - a[1]);
   const max = sorted[0]?.[1] || 1;
 
-  contenedor.innerHTML = sorted.map(([plat, count]) => {
-    const pct = Math.round((count / max) * 100);
-    return `
-      <div class="grafico-fila">
-        <span class="grafico-label">${plat}</span>
-        <div class="grafico-barra-wrap">
-          <div class="grafico-barra" style="width:0%"></div>
-        </div>
-        <span class="grafico-valor">${count}</span>
-      </div>
-    `;
-  }).join("");
+  contenedor.innerHTML = "";
+  sorted.forEach(([plat, count]) => {
+    const fila = document.createElement("div");
+    fila.className = "grafico-fila";
 
-  // Animate bars after a brief delay
+    const label = document.createElement("span");
+    label.className = "grafico-label";
+    label.textContent = plat;
+
+    const barraWrap = document.createElement("div");
+    barraWrap.className = "grafico-barra-wrap";
+    const barra = document.createElement("div");
+    barra.className = "grafico-barra";
+    barra.style.width = "0%";
+    barraWrap.appendChild(barra);
+
+    const valor = document.createElement("span");
+    valor.className = "grafico-valor";
+    valor.textContent = count;
+
+    fila.append(label, barraWrap, valor);
+    contenedor.appendChild(fila);
+  });
+
   requestAnimationFrame(() => {
     setTimeout(() => {
       contenedor.querySelectorAll('.grafico-barra').forEach((barra, i) => {
-        const pct = Math.round((sorted[i][1] / max) * 100);
-        barra.style.width = pct + '%';
+        barra.style.width = Math.round((sorted[i][1] / max) * 100) + '%';
       });
     }, 100);
   });
@@ -1148,9 +1129,10 @@ function agregarEventos() {
   document.getElementById("btnRestaurar").addEventListener("click", restaurarJuegosEjemplo);
   document.getElementById("btnLimpiarFiltros").addEventListener("click", limpiarFiltros);
 
-  ["buscarJuego", "filtroPlataforma", "filtroGenero", "filtroDestacado", "ordenar"].forEach(id => {
-    document.getElementById(id).addEventListener("input", aplicarFiltros);
-    document.getElementById(id).addEventListener("change", aplicarFiltros);
+  ["buscarJuego","filtroPlataforma","filtroGenero","filtroDestacado","ordenar"].forEach(id => {
+    const el = document.getElementById(id);
+    el.addEventListener("input", aplicarFiltros);
+    el.addEventListener("change", aplicarFiltros);
   });
 
   document.getElementById("btnIrFormulario").addEventListener("click", () => {
@@ -1158,10 +1140,7 @@ function agregarEventos() {
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      cerrarModal();
-      cerrarVistaRapida();
-    }
+    if (e.key === "Escape") { cerrarModal(); cerrarVistaRapida(); }
   });
 
   document.getElementById("cerrarVistaRapida").addEventListener("click", cerrarVistaRapida);
